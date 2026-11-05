@@ -1,0 +1,17 @@
+{{- if and .Values.realmImport.enabled (not .Values.realmImport.existingSecret) (not .Values.realmImport.existingConfigMap) }}
+{{- $files := .Values.realmImport.files | default dict }}
+{{- if eq (len $files) 0 }}
+{{- fail "realmImport.files is required when realmImport.enabled and neither existingConfigMap nor existingSecret is set" }}
+{{- end }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "keycloak.realmImportConfigMapName" . }}
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+data:
+  {{- range $name, $content := $files }}
+  {{ $name }}: |
+    {{- $content | nindent 4 }}
+  {{- end }}
+{{- end }}

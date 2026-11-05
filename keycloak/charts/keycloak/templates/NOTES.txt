@@ -1,0 +1,22 @@
+1. Keycloak has been deployed.
+
+  URL: https://{{ .Values.ingress.hostname }}/
+
+2. Admin console:
+
+  User: {{ .Values.auth.adminUser }}
+
+  Retrieve the admin password:
+    kubectl get secret {{ include "keycloak.secretName" . }} -n {{ .Release.Namespace }} -o jsonpath='{.data.KC_BOOTSTRAP_ADMIN_PASSWORD}' | base64 -d && echo
+
+{{- if .Values.database.enabled }}
+{{- if not .Values.database.existingSecret }}
+3. Database password (for external PostgreSQL user {{ .Values.database.username }}):
+
+    kubectl get secret {{ include "keycloak.dbSecretName" . }} -n {{ .Release.Namespace }} -o jsonpath='{.data.KC_DB_PASSWORD}' | base64 -d && echo
+{{- end }}
+
+4. Ensure PostgreSQL is reachable at {{ .Values.database.host }}:{{ .Values.database.port }} with database {{ .Values.database.name }} before Keycloak becomes ready.
+{{- else }}
+3. Database: Keycloak is using its embedded (dev-file) database. Data is ephemeral with the pod; set database.enabled=true and configure database.* to use external PostgreSQL.
+{{- end }}

@@ -1,0 +1,105 @@
+# Optionally override the fully qualified name
+fullnameOverride: ""
+
+# Optionally override the name
+nameOverride: ""
+
+replicas: 1
+
+image:
+  repository: quay.io/keycloak/keycloak
+  tag: "26.6.2"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+serviceAccount:
+  create: false
+  name: ""
+  annotations: {}
+
+podAnnotations: {}
+podLabels: {}
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+  managementPort: 9000
+  annotations: {}
+
+ingress:
+  enabled: true
+  className: traefik
+  hostname: rc-uv.canfar.net
+  path: /keycloak
+  pathType: Prefix
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+  # Optional per-ingress TLS; leave empty when Traefik manages certificates
+  tls: []
+  #  - secretName: rc-uv-canfar-net-tls
+  #    hosts:
+  #      - rc-uv.canfar.net
+  management:
+    enabled: false
+    path: /
+    pathType: Prefix
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: management
+
+keycloak:
+  hostname: rc-uv.canfar.net
+  hostnameStrict: false
+  proxyHeaders: xforwarded
+  httpEnabled: true
+  httpRelativePath: /keycloak
+  healthEnabled: false
+  metricsEnabled: false
+  extraEnv: []
+  extraEnvFrom: []
+
+database:
+  # When false, Keycloak uses its embedded (dev-file) database.
+  # Set true to wire KC_DB* to an external PostgreSQL instance.
+  enabled: false
+  vendor: postgres
+  host: postgresql
+  port: 5432
+  name: auth
+  username: admin
+  password: pw-admin
+  schema: keycloak
+  existingSecret: ""
+  existingSecretKey: password
+
+auth:
+  adminUser: admin
+  adminPassword: pw-admin
+  existingSecret: ""
+  generatePassword: false
+
+# Import realm JSON at startup via --import-realm (mounted at /opt/keycloak/data/import).
+# Existing realms are skipped; see README for overwrite notes and LDAP mapper placement.
+realmImport:
+  enabled: false
+  # Prefer one source when enabled:
+  existingConfigMap: ""
+  existingSecret: ""
+  files: {}
+  # files:
+  #   cadc.json: |
+  #     { "realm": "cadc", "enabled": true }

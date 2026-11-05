@@ -1,0 +1,20 @@
+# Local overlay: ClusterIP + kubectl port-forward (no Traefik ingress).
+#   kubectl -n keycloak port-forward svc/keycloak 8080:80
+#   open http://localhost:8080/keycloak
+
+ingress:
+  enabled: false
+
+service:
+  type: ClusterIP
+
+keycloak:
+  hostname: localhost
+  hostnameStrict: false
+  proxyHeaders: ""
+  httpEnabled: true
+  httpRelativePath: /keycloak
+
+auth:
+  adminUser: admin
+  adminPassword: pw-admin
