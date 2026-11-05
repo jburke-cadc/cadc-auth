@@ -43,7 +43,7 @@ service:
 ingress:
   enabled: true
   className: traefik
-  hostname: rc-uv.canfar.net
+  hostname: dev.canfar.net
   path: /keycloak
   pathType: Prefix
   annotations:
@@ -62,7 +62,7 @@ ingress:
       traefik.ingress.kubernetes.io/router.entrypoints: management
 
 keycloak:
-  hostname: rc-uv.canfar.net
+  hostname: dev.canfar.net
   hostnameStrict: false
   proxyHeaders: xforwarded
   httpEnabled: true
