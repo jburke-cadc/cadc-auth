@@ -27,5 +27,5 @@ spec:
               service:
                 name: {{ include "keycloak.fullname" . }}
                 port:
-                  number: {{ .Values.service.port }}
+                  name: http
 {{- end }}

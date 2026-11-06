@@ -49,11 +49,8 @@ ingress:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-  # Optional per-ingress TLS; leave empty when Traefik manages certificates
   tls: []
-  #  - secretName: rc-uv-canfar-net-tls
-  #    hosts:
-  #      - rc-uv.canfar.net
+
   management:
     enabled: false
     path: /
