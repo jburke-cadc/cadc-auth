@@ -46,9 +46,7 @@ ingress:
   hostname: dev.canfar.net
   path: /keycloak
   pathType: Prefix
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
+  annotations: {}
   tls: []
 
   management:
@@ -87,7 +85,6 @@ auth:
   adminUser: admin
   adminPassword: pw-admin
   existingSecret: ""
-  generatePassword: false
 
 # Import realm JSON at startup via --import-realm (mounted at /opt/keycloak/data/import).
 # Existing realms are skipped; see README for overwrite notes and LDAP mapper placement.
