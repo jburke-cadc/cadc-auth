@@ -46,6 +46,8 @@ spec:
           env:
             - name: KC_HTTP_ENABLED
               value: {{ .Values.keycloak.httpEnabled | quote }}
+            - name: KC_HOSTNAME_STRICT_HTTPS
+              value: "false"  
             - name: KC_PROXY_HEADERS
               value: {{ .Values.keycloak.proxyHeaders | quote }}
             - name: KC_HOSTNAME
