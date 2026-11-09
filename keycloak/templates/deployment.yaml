@@ -49,7 +49,7 @@ spec:
             # - name: KC_PROXY_HEADERS
             #   value: {{ .Values.keycloak.proxyHeaders | quote }}
             - name: KC_PROXY
-              value: "passthrough"
+              value: "edge"
             - name: KC_HOSTNAME
               value: {{ .Values.keycloak.hostname | quote }}
             - name: KC_HOSTNAME_STRICT
