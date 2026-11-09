@@ -60,7 +60,7 @@ keycloak:
   hostname: dev.canfar.net
   hostnameStrict: false
   proxyHeaders: xforwarded
-  httpEnabled: false
+  httpEnabled: true
   httpRelativePath: /keycloak
   healthEnabled: false
   metricsEnabled: false
