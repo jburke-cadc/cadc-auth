@@ -62,7 +62,6 @@ ingress:
 
 keycloak:
   hostname: https://dev.canfar.net
-  hostnameAdmin: https://dev.canfar.net/keycloak/admin
   proxy: edge
   proxyHeaders: xforwarded
   httpEnabled: true
