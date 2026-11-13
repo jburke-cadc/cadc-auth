@@ -47,7 +47,7 @@ service:
 ingress:
   enabled: true
   className: traefik
-  hostname: https://dev.canfar.net
+  hostname: dev.canfar.net
   path: /keycloak
   pathType: Prefix
   annotations: {}
@@ -63,7 +63,7 @@ ingress:
 keycloak:
   hostname: https://dev.canfar.net
   hostnameAdmin: https://dev.canfar.net
-  hostnameStrict: false
+  hostnameStrict: true
   proxyHeaders: xforwarded
   httpEnabled: true
   httpRelativePath: /keycloak
