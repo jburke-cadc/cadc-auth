@@ -1,6 +1,6 @@
 # Override arguments to pass start-dev to Quarkus
-command: ["/opt/keycloak/bin/kc.sh"]
-args: ["start-dev"]
+# command: ["/opt/keycloak/bin/kc.sh"]
+# args: ["start-dev"]
 
 # Optionally override the fully qualified name
 fullnameOverride: ""
