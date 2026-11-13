@@ -54,8 +54,8 @@ spec:
               value: {{ .Values.keycloak.proxyHeaders | quote }}
             - name: KC_HOSTNAME
               value: {{ .Values.keycloak.hostname | quote }}
-            - name: KC_HOSTNAME_ADMIN
-              value: {{ .Values.keycloak.hostnameAdmin | quote }}
+            # - name: KC_HOSTNAME_ADMIN
+            #   value: {{ .Values.keycloak.hostnameAdmin | quote }}
             - name: KC_HOSTNAME_STRICT
               value: {{ .Values.keycloak.hostnameStrict | quote }}
             - name: KC_HTTP_RELATIVE_PATH
