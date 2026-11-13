@@ -44,29 +44,41 @@ spec:
             - --import-realm
             {{- end }}
           env:
-            - name: KC_HTTP_ENABLED
-              value: {{ .Values.keycloak.httpEnabled | quote }}
-            - name: KC_HOSTNAME_STRICT_HTTPS
-              value: "true"
-            - name: KC_PROXY
-              value: "edge"
-            - name: KC_PROXY_HEADERS
-              value: {{ .Values.keycloak.proxyHeaders | quote }}
+            {{- if .Values.keycloak.hostname }}
             - name: KC_HOSTNAME
               value: {{ .Values.keycloak.hostname | quote }}
+            {{- end }}
+            {{- if .Values.keycloak.hostnameAdmin }}
             - name: KC_HOSTNAME_ADMIN
               value: {{ .Values.keycloak.hostnameAdmin | quote }}
-            - name: KC_HOSTNAME_STRICT
-              value: {{ .Values.keycloak.hostnameStrict | quote }}
+            {{- end }}
+            {{- if .Values.keycloak.proxy }}
+            - name: KC_PROXY
+              value: {{ .Values.keycloak.proxy | quote }}
+            {{- end }}
+            {{- if .Values.keycloak.proxyHeaders }}
+            - name: KC_PROXY_HEADERS
+              value: {{ .Values.keycloak.proxyHeaders | quote }}
+            {{- end }}
+            {{- if .Values.keycloak.httpEnabled }}
+            - name: KC_HTTP_ENABLED
+              value: {{ .Values.keycloak.httpEnabled | quote }}
+            {{- end }}
+            {{- if .Values.keycloak.httpRelativePath }}
             - name: KC_HTTP_RELATIVE_PATH
               value: {{ .Values.keycloak.httpRelativePath | quote }}
+            {{- end }}
+            {{- if .Values.keycloak.hostnameStrict }}
+            - name: KC_HOSTNAME_STRICT
+              value: {{ .Values.keycloak.hostnameStrict | quote }}
+            {{- end }}
             {{- if .Values.keycloak.healthEnabled }}
             - name: KC_HEALTH_ENABLED
-              value: "true"
+              value: {{ .Values.keycloak.healthEnabled | quote }}
             {{- end }}
             {{- if .Values.keycloak.metricsEnabled }}
             - name: KC_METRICS_ENABLED
-              value: "true"
+              value: {{ .Values.keycloak.metricsEnabled | quote }}
             {{- end }}
             {{- if .Values.database.enabled }}
             - name: KC_DB
