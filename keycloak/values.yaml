@@ -62,7 +62,7 @@ ingress:
 
 keycloak:
   hostname: https://dev.canfar.net
-  # hostnameAdmin: https://dev.canfar.net/keycloak
+  hostnameAdmin: https://dev.canfar.net/keycloak
   hostnameStrict: true
   proxyHeaders: xforwarded
   httpEnabled: true
