@@ -61,7 +61,7 @@ ingress:
       traefik.ingress.kubernetes.io/router.entrypoints: management
 
 keycloak:
-  hostname: https://dev.canfar.net
+  hostname: dev.canfar.net
   proxy: edge
   proxyHeaders: xforwarded
   httpEnabled: true

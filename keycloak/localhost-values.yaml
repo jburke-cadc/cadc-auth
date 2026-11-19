@@ -5,12 +5,5 @@
 ingress:
   enabled: false
 
-service:
-  type: ClusterIP
-
 keycloak:
   hostname: localhost
-
-auth:
-  adminUser: admin
-  adminPassword: pw-admin
