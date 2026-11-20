@@ -52,10 +52,10 @@ spec:
             - name: KC_HOSTNAME_ADMIN
               value: {{ .Values.keycloak.hostnameAdmin | quote }}
             {{- end }}
-            {{- if .Values.keycloak.proxy }}
-            - name: KC_PROXY
-              value: {{ .Values.keycloak.proxy | quote }}
-            {{- end }}
+            # {{- if .Values.keycloak.proxy }}
+            # - name: KC_PROXY
+            #   value: {{ .Values.keycloak.proxy | quote }}
+            # {{- end }}
             {{- if .Values.keycloak.proxyHeaders }}
             - name: KC_PROXY_HEADERS
               value: {{ .Values.keycloak.proxyHeaders | quote }}
