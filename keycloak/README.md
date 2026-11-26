@@ -78,6 +78,18 @@ LDAP User Federation and attribute mappers belong in the realm JSON (not Helm `K
 }
 ```
 
+### Truststore (LDAP / outbound TLS)
+
+Defaults mount CA PEMs from Secret `cadc-ca-cert` at `/opt/keycloak/conf/truststores` and set `KC_TRUSTSTORE_PATHS` to that directory. Create the Secret in the release namespace before install (chart does not create it):
+
+```bash
+kubectl create secret generic cadc-ca-cert \
+  --from-file=cadc-ca-cert.pem=./your-ca.pem \
+  -n cadc-auth
+```
+
+Any `*.pem` / cert keys in the Secret are loaded. For LDAPS, set the LDAP provider **Use Truststore SPI** to `ldapsOnly` (or always). Override via `keycloak.extraEnv`, `keycloak.extraVolumes`, and `keycloak.extraVolumeMounts` if needed.
+
 ## Optional PostgreSQL
 
 For persistent / production use, point Keycloak at an existing PostgreSQL instance reachable from the cluster and enable external database settings:
@@ -114,6 +126,9 @@ If you use a non-default schema (default `database.schema: keycloak`), create th
 | `database.host` | `postgresql` | External PostgreSQL hostname; required when `database.enabled` is true |
 | `keycloak.hostname` | `rc-uv.canfar.net` | Keycloak public hostname |
 | `keycloak.proxyHeaders` | `xforwarded` | Reverse proxy header mode |
+| `keycloak.extraEnv` | `KC_TRUSTSTORE_PATHS` | Extra container env (default points at truststore mount) |
+| `keycloak.extraVolumes` | `cadc-ca-cert` Secret | Extra pod volumes |
+| `keycloak.extraVolumeMounts` | `/opt/keycloak/conf/truststores` | Extra container volume mounts |
 | `realmImport.enabled` | `false` | Mount realm JSON and pass `--import-realm` |
 | `realmImport.files` | `{}` | Map of `*.json` filename → realm JSON (creates ConfigMap) |
 | `realmImport.existingConfigMap` | `""` | Mount an existing ConfigMap instead of `files` |

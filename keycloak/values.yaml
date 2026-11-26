@@ -69,8 +69,19 @@ keycloak:
   hostnameStrict: true
   healthEnabled: false
   metricsEnabled: false
-  extraEnv: []
+  # Trust CA PEMs from Secret cadc-ca-cert (create in the release namespace first).
+  extraEnv:
+    - name: KC_TRUSTSTORE_PATHS
+      value: /opt/keycloak/conf/truststores
   extraEnvFrom: []
+  extraVolumes:
+    - name: cadc-ca-cert
+      secret:
+        secretName: cadc-ca-cert
+  extraVolumeMounts:
+    - name: cadc-ca-cert
+      mountPath: /opt/keycloak/conf/truststores
+      readOnly: true
 
 database:
   # When false, Keycloak uses its embedded (dev-file) database.

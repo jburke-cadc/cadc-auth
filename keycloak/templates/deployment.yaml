@@ -52,10 +52,6 @@ spec:
             - name: KC_HOSTNAME_ADMIN
               value: {{ .Values.keycloak.hostnameAdmin | quote }}
             {{- end }}
-            # {{- if .Values.keycloak.proxy }}
-            # - name: KC_PROXY
-            #   value: {{ .Values.keycloak.proxy | quote }}
-            # {{- end }}
             {{- if .Values.keycloak.proxyHeaders }}
             - name: KC_PROXY_HEADERS
               value: {{ .Values.keycloak.proxyHeaders | quote }}
@@ -143,14 +139,20 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.realmImport.enabled }}
+          {{- if or .Values.realmImport.enabled .Values.keycloak.extraVolumeMounts }}
           volumeMounts:
+            {{- if .Values.realmImport.enabled }}
             - name: realm-import
               mountPath: /opt/keycloak/data/import
               readOnly: true
+            {{- end }}
+            {{- with .Values.keycloak.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
-      {{- if .Values.realmImport.enabled }}
+      {{- if or .Values.realmImport.enabled .Values.keycloak.extraVolumes }}
       volumes:
+        {{- if .Values.realmImport.enabled }}
         - name: realm-import
           {{- if .Values.realmImport.existingSecret }}
           secret:
@@ -159,6 +161,10 @@ spec:
           configMap:
             name: {{ include "keycloak.realmImportSourceName" . }}
           {{- end }}
+        {{- end }}
+        {{- with .Values.keycloak.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
