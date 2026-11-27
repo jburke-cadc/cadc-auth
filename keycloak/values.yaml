@@ -75,11 +75,11 @@ keycloak:
       value: /opt/keycloak/conf/truststores
   extraEnvFrom: []
   extraVolumes:
-    - name: cadc-ca-cert
+    - name: ca-bundle
       secret:
-        secretName: cadc-ca-cert
+        secretName: ca-bundle
   extraVolumeMounts:
-    - name: cadc-ca-cert
+    - name: ca-bundle
       mountPath: /opt/keycloak/conf/truststores
       readOnly: true
 

@@ -83,8 +83,8 @@ LDAP User Federation and attribute mappers belong in the realm JSON (not Helm `K
 Defaults mount CA PEMs from Secret `cadc-ca-cert` at `/opt/keycloak/conf/truststores` and set `KC_TRUSTSTORE_PATHS` to that directory. Create the Secret in the release namespace before install (chart does not create it):
 
 ```bash
-kubectl create secret generic cadc-ca-cert \
-  --from-file=cadc-ca-cert.pem=./your-ca.pem \
+kubectl create secret generic ca-bundle \
+  --from-file=ca-bundle.pem=./your-ca.pem \
   -n cadc-auth
 ```
 
@@ -127,7 +127,7 @@ If you use a non-default schema (default `database.schema: keycloak`), create th
 | `keycloak.hostname` | `rc-uv.canfar.net` | Keycloak public hostname |
 | `keycloak.proxyHeaders` | `xforwarded` | Reverse proxy header mode |
 | `keycloak.extraEnv` | `KC_TRUSTSTORE_PATHS` | Extra container env (default points at truststore mount) |
-| `keycloak.extraVolumes` | `cadc-ca-cert` Secret | Extra pod volumes |
+| `keycloak.extraVolumes` | `ca-bundle` Secret | Extra pod volumes |
 | `keycloak.extraVolumeMounts` | `/opt/keycloak/conf/truststores` | Extra container volume mounts |
 | `realmImport.enabled` | `false` | Mount realm JSON and pass `--import-realm` |
 | `realmImport.files` | `{}` | Map of `*.json` filename → realm JSON (creates ConfigMap) |
