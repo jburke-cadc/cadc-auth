@@ -82,6 +82,11 @@ keycloak:
     - name: ca-bundle
       mountPath: /opt/keycloak/conf/truststores
       readOnly: true
+  # LDAP hosts used by the existing CADC ac deployments; keep if cluster DNS
+  # does not resolve quokka.
+  extraHosts:
+    - hostname: quokka.canfar.internal
+      ip: 206.12.48.218    
 
 database:
   # When false, Keycloak uses its embedded (dev-file) database.
