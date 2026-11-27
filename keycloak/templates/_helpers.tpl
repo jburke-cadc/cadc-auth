@@ -111,3 +111,21 @@ Name of the ConfigMap or Secret mounted for realm import
 {{- include "keycloak.realmImportConfigMapName" . -}}
 {{- end -}}
 {{- end }}
+
+{{/*
+Whether embedded-DB persistence is active (PVC mount for /opt/keycloak/data).
+*/}}
+{{- define "keycloak.persistence.enabled" -}}
+{{- and .Values.persistence.enabled (not .Values.database.enabled) -}}
+{{- end }}
+
+{{/*
+PersistentVolumeClaim name for embedded Keycloak data.
+*/}}
+{{- define "keycloak.pvcName" -}}
+{{- if .Values.persistence.existingClaim -}}
+{{- .Values.persistence.existingClaim -}}
+{{- else -}}
+{{- printf "%s-data" (include "keycloak.fullname" .) -}}
+{{- end -}}
+{{- end }}

@@ -90,9 +90,23 @@ kubectl create secret generic ca-bundle \
 
 Any `*.pem` / cert keys in the Secret are loaded. For LDAPS, set the LDAP provider **Use Truststore SPI** to `ldapsOnly` (or always). Override via `keycloak.extraEnv`, `keycloak.extraVolumes`, and `keycloak.extraVolumeMounts` if needed.
 
+## Embedded database persistence
+
+When `database.enabled` is false, Keycloak uses its embedded (`dev-file`) database under `/opt/keycloak/data`. By default the chart creates a PVC and mounts it there so realms and config survive restarts:
+
+```yaml
+persistence:
+  enabled: true
+  size: 1Gi
+  accessModes:
+    - ReadWriteOnce
+```
+
+Use `replicas: 1` with `ReadWriteOnce`. Set `persistence.existingClaim` to reuse a claim, or `persistence.enabled: false` for ephemeral data. Persistence is skipped automatically when `database.enabled: true`.
+
 ## Optional PostgreSQL
 
-For persistent / production use, point Keycloak at an existing PostgreSQL instance reachable from the cluster and enable external database settings:
+For production, point Keycloak at an existing PostgreSQL instance reachable from the cluster and enable external database settings:
 
 ```yaml
 database:
@@ -122,6 +136,9 @@ If you use a non-default schema (default `database.schema: keycloak`), create th
 | `service.port` | `80` | Service port (Traefik backend) |
 | `service.targetPort` | `8080` | Keycloak HTTP container port |
 | `service.managementPort` | `9000` | Keycloak management/health port |
+| `persistence.enabled` | `true` | PVC for embedded DB data (ignored if `database.enabled`) |
+| `persistence.size` | `1Gi` | PVC size when the chart creates the claim |
+| `persistence.existingClaim` | `""` | Use an existing PVC instead of creating one |
 | `database.enabled` | `false` | Use external PostgreSQL (`true`) or Keycloak embedded DB (`false`) |
 | `database.host` | `postgresql` | External PostgreSQL hostname; required when `database.enabled` is true |
 | `keycloak.hostname` | `rc-uv.canfar.net` | Keycloak public hostname |

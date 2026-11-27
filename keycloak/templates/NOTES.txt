@@ -18,5 +18,9 @@
 
 4. Ensure PostgreSQL is reachable at {{ .Values.database.host }}:{{ .Values.database.port }} with database {{ .Values.database.name }} before Keycloak becomes ready.
 {{- else }}
-3. Database: Keycloak is using its embedded (dev-file) database. Data is ephemeral with the pod; set database.enabled=true and configure database.* to use external PostgreSQL.
+{{- if eq (include "keycloak.persistence.enabled" .) "true" }}
+3. Database: Keycloak is using its embedded (dev-file) database on PVC {{ include "keycloak.pvcName" . }} (mounted at {{ .Values.persistence.mountPath }}). Keep replicas at 1 with ReadWriteOnce.
+{{- else }}
+3. Database: Keycloak is using its embedded (dev-file) database with no persistence; data is lost on pod restart. Set persistence.enabled=true, or database.enabled=true for external PostgreSQL.
+{{- end }}
 {{- end }}

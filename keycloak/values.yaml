@@ -88,6 +88,19 @@ keycloak:
     - hostname: quokka.canfar.internal
       ip: 206.12.48.218    
 
+# Persist the embedded (dev-file) database under /opt/keycloak/data.
+# Ignored when database.enabled is true (external PostgreSQL).
+# Use replicas: 1 with ReadWriteOnce.
+persistence:
+  enabled: true
+  existingClaim: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  storageClass: ""
+  annotations: {}
+  mountPath: /opt/keycloak/data
+
 database:
   # When false, Keycloak uses its embedded (dev-file) database.
   # Set true to wire KC_DB* to an external PostgreSQL instance.

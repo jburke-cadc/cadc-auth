@@ -6,6 +6,10 @@ metadata:
     {{- include "keycloak.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
+  {{- if eq (include "keycloak.persistence.enabled" .) "true" }}
+  strategy:
+    type: Recreate
+  {{- end }}
   selector:
     matchLabels:
       {{- include "keycloak.selectorLabels" . | nindent 6 }}
@@ -22,6 +26,10 @@ spec:
         {{- end }}
     spec:
       serviceAccountName: {{ include "keycloak.serviceAccountName" . }}
+      {{- if eq (include "keycloak.persistence.enabled" .) "true" }}
+      securityContext:
+        fsGroup: 1000
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -139,11 +147,15 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if or .Values.realmImport.enabled .Values.keycloak.extraVolumeMounts }}
+          {{- if or (eq (include "keycloak.persistence.enabled" .) "true") .Values.realmImport.enabled .Values.keycloak.extraVolumeMounts }}
           volumeMounts:
+            {{- if eq (include "keycloak.persistence.enabled" .) "true" }}
+            - name: data
+              mountPath: {{ .Values.persistence.mountPath }}
+            {{- end }}
             {{- if .Values.realmImport.enabled }}
             - name: realm-import
-              mountPath: /opt/keycloak/data/import
+              mountPath: {{ printf "%s/import" .Values.persistence.mountPath }}
               readOnly: true
             {{- end }}
             {{- with .Values.keycloak.extraVolumeMounts }}
@@ -158,8 +170,13 @@ spec:
             - {{ $extraHost.hostname }}
         {{- end }}
       {{- end }}
-      {{- if or .Values.realmImport.enabled .Values.keycloak.extraVolumes }}
+      {{- if or (eq (include "keycloak.persistence.enabled" .) "true") .Values.realmImport.enabled .Values.keycloak.extraVolumes }}
       volumes:
+        {{- if eq (include "keycloak.persistence.enabled" .) "true" }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "keycloak.pvcName" . }}
+        {{- end }}
         {{- if .Values.realmImport.enabled }}
         - name: realm-import
           {{- if .Values.realmImport.existingSecret }}
