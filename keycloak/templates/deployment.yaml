@@ -150,13 +150,14 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
-      {{- with .Values.keycloak.extraHosts }}    
+      {{- with .Values.keycloak.extraHosts }}
       hostAliases:
-      {{- range $extraHost := . }}
+        {{- range $extraHost := . }}
         - ip: {{ $extraHost.ip }}
           hostnames:
             - {{ $extraHost.hostname }}
-      {{- end }}    
+        {{- end }}
+      {{- end }}
       {{- if or .Values.realmImport.enabled .Values.keycloak.extraVolumes }}
       volumes:
         {{- if .Values.realmImport.enabled }}
